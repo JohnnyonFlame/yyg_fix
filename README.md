@@ -27,7 +27,7 @@ Patch your runner. In this case, you can apply the [ips patch](patch.ips) with [
 $ xdelta patch patch.xdelta TheyNeedToBeFed TheyNeedToBeFed_PATCHED
 ```
 
-If the game is running _Bytecode 16_ or higher, you'll need to downgrade your `.win`/`.unx` file using the [UndertaleModTool (UTMT)](https://github.com/krzys-h/UndertaleModTool) with the [downgrader extension](16Or17To15.csx), then save it or rename it as `game.unx`.
+If the game is running _Bytecode 16_ or higher, you'll need to downgrade your `.win` or `.unx` file using the [UndertaleModTool (UTMT)](https://github.com/krzys-h/UndertaleModTool) with the [downgrader extension](https://raw.githubusercontent.com/JohnnyonFlame/yyg_fix/master/16Or17To15.csx), the file must be renamed/saved as `game.unx` - regardless of version.
 
 ![](https://i.imgur.com/SExco4J.png)
 
