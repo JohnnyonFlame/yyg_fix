@@ -115,12 +115,9 @@ static int get_var_slot_by_name(const int *off_count, const yyg_vdecl_t *off_reg
 {
 	int vars = *off_count;
 	//printf("Found %d vars.\n", vars);
-	
-	if (vars > 0) {
-		for (int i = 0; i < vars; i++) {
-			if (strcmp(off_registry[i].name, var) == 0)
-				return i;
-		}
+	for (int i = 0; i < vars; i++) {
+		if (strcmp(off_registry[i].name, var) == 0)
+			return i;
 	}
 	
 	return -1;
