@@ -13,25 +13,18 @@ This is a set of fixes and shim libraries for the Raspberry Pi's GameMaker runne
 
 # Usage:
 
-Compile these libraries with your favorite toolchain, you might need to edit the Makefile to suit your toolchain:
+Either download [a binary release](https://github.com/JohnnyonFlame/yyg_fix/releases/latest) from the releases page, or compile them with your favorite toolchain (you might need to edit the Makefile accordingly):
 
 ```
 $ make
 ```
 
-You'll need a copy of the Raspberry Pi runners. You can find one freely available at [the yoyogames server](http://download.yoyogames.com/pi/TheyNeedToBeFed.tar.gz). These are freeware and thus should not be redistributed, specially pre-patched.
-
-Patch your runner. In this case, you can apply an [xdelta](patch.xdelta) on the _They Need To Be Fed_ runner.
+You'll also need a copy of the Raspberry Pi runners. You can find one freely available at [the yoyogames server](http://download.yoyogames.com/pi/TheyNeedToBeFed.tar.gz), (you might need to _right click_ and select _save as_ on some browsers). These are freeware and thus should not be redistributed, specially pre-patched.
+ 
+Patch your runner. In this case, you can apply an [xdelta](patch.xdelta) on the _They Need To Be Fed_ runner using [xdelta](https://github.com/jmacd/xdelta-gpl/releases).
 
 ```
 $ xdelta patch patch.xdelta TheyNeedToBeFed TheyNeedToBeFed_PATCHED
-```
-
-Patch it once more if you're running on 351ELEC/EMUELEC instead of ArkOS.
-
-```
-$ patchelf --set-interpreter /usr/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For 351ELEC
-$ patchelf --set-interpreter /usr/config/emuelec/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For EMUELEC
 ```
 
 If the game is running _Bytecode 16_ or higher, you'll need to downgrade your `.win`/`.unx` file using the [UndertaleModTool (UTMT)](https://github.com/krzys-h/UndertaleModTool) with the [downgrader extension](16Or17To15.csx), then save it or rename it as `game.unx`.
@@ -52,26 +45,32 @@ $ find /roms/ports/nthrone
 /roms/ports/nthrone/TheyNeedToBeFed_PATCHED
 ```
 
-Now you can either launch from the terminal:
-
-```
-$ systemctl stop emustation.service
-$ LD_LIBRARY_PATH=/usr/lib32:/usr/config/emuelec/lib32:$PWD LD_PRELOAD=libbcm_host.so ./TheyNeedToBeFed_PATCHED
-```
-
-Or create a launch script, like this one:
+Now either create a launch script on your game folder, like this one (remember to uncomment the patchelf lines if necessary):
 
 ```bash
 #!/bin/bash
 
 cd "$(dirname "$0")"
-export LD_LIBRARY_PATH=/usr/lib32:$PWD
+export LD_LIBRARY_PATH=/usr/lib32:/usr/config/emuelec/lib32:$PWD
 export LD_PRELOAD=$PWD/libbcm_host.so
 export REMAPPER=rg351p-js2xbox
+
+# Uncomment either of these lines depending on your OS of choice
+# patchelf --set-interpreter /usr/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For 351ELEC
+# patchelf --set-interpreter /usr/config/emuelec/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For EMUELEC
 
 ~/$REMAPPER &
 ./TheyNeedToBeFed_patched
 killall -9 $REMAPPER
+```
+
+Or launch it via SSH, using one of the two patchelf lines if you're either on 351ELEC or EMUELEC:
+
+```
+$ patchelf --set-interpreter /usr/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For 351ELEC
+$ patchelf --set-interpreter /usr/config/emuelec/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For EMUELEC
+$ systemctl stop emustation.service
+$ LD_LIBRARY_PATH=/usr/lib32:/usr/config/emuelec/lib32:$PWD LD_PRELOAD=libbcm_host.so ./TheyNeedToBeFed_PATCHED
 ```
 
 Enjoy!
