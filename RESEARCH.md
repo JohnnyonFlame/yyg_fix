@@ -198,6 +198,6 @@ This project wouldn't be possible, or would be way harder without the aid of the
 - [jdonald](https://github.com/jdonald/) for the initial implementation of [gamemaker-rpi-wrapper](https://github.com/jdonald/gamemaker-rpi-wrapper/).
 - Grossley for the `16Or17To15.csx` downgrader.
 - [Kneesnap](https://github.com/Kneesnap/) for [inspiring the approach](https://github.com/Kneesnap/deltarune-circuit-sword) and some help.
-- [nik](https://github.com/nkrapivin) for [general pointers and corrections, and better definitions for the yyg runner internals](https://github.com/nkrapivin).
+- [nik](https://github.com/nkrapivin) for [general pointers and corrections, and better definitions for the yyg runner internals](https://github.com/nkrapivin/libLassebq).
 - Surkow for helping proofread this article.
 - Anyone that I might've neglected here. You know who you are.
