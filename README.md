@@ -31,21 +31,7 @@ If the game is running _Bytecode 16_ or higher, you'll need to downgrade your `.
 
 ![](https://i.imgur.com/SExco4J.png)
 
-Copy the generated `libcurl.so.4`, `libbcm_host.so` and `TheyNeedToBeFed_PATCHED` to the root, and the game data on a folder named `assets` (including the `.unx` file) to your device, a good install should look like this:
-
-```
-$ find /roms/ports/nthrone
-/roms/ports/nthrone
-/roms/ports/nthrone/assets
-/roms/ports/nthrone/assets/<many ogg files>.ogg
-/roms/ports/nthrone/assets/splash.png
-/roms/ports/nthrone/assets/game.unx
-/roms/ports/nthrone/libbcm_host.so
-/roms/ports/nthrone/libcurl.so.4
-/roms/ports/nthrone/TheyNeedToBeFed_PATCHED
-```
-
-Now either create a launch script on your game folder, like this one (remember to uncomment the patchelf lines if necessary):
+Copy the generated `libcurl.so.4`, `libbcm_host.so` and `TheyNeedToBeFed_PATCHED` to the root, and the game data on a folder named `assets` (including the `.unx` file) to your device, and then create the `launch.sh` script on your game folder, like this one (remember to uncomment the patchelf lines if necessary):
 
 ```bash
 #!/bin/bash
@@ -64,7 +50,22 @@ export REMAPPER=rg351p-js2xbox
 killall -9 $REMAPPER
 ```
 
-Or launch it via SSH, using one of the two patchelf lines if you're either on 351ELEC or EMUELEC:
+A good install, which will allow you to launch these games from EmulationStation, should look like this:
+
+```
+$ find /roms/ports/nthrone
+/roms/ports/nthrone
+/roms/ports/nthrone/assets
+/roms/ports/nthrone/assets/<many ogg files>.ogg
+/roms/ports/nthrone/assets/splash.png
+/roms/ports/nthrone/assets/game.unx
+/roms/ports/nthrone/libbcm_host.so
+/roms/ports/nthrone/libcurl.so.4
+/roms/ports/nthrone/TheyNeedToBeFed_PATCHED
+/roms/ports/nthrone/launch.sh
+```
+
+You can also test it via SSH, using one of the two patchelf lines (if you're either on 351ELEC or EMUELEC):
 
 ```
 $ patchelf --set-interpreter /usr/lib32/ld-linux-armhf.so.3 TheyNeedToBeFed_PATCHED # For 351ELEC
