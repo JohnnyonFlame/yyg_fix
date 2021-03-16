@@ -17,12 +17,11 @@ typedef void* DISPMANX_TRANSFORM_T;
 typedef int VC_RECT_T;
 
 typedef struct {
-   DISPMANX_ELEMENT_HANDLE_T element;
-   int width;   /* This is necessary because dispmanx elements are not queriable. */
-   int height;
- } EGL_DISPMANX_WINDOW_T;
+	DISPMANX_ELEMENT_HANDLE_T element;
+	int width;   /* This is necessary because dispmanx elements are not queriable. */
+	int height;
+} EGL_DISPMANX_WINDOW_T;
 
-void *libXext;
 static SDL_Window *sdl_window = NULL;
 static SDL_GLContext *sdl_ctx = NULL;
 
@@ -65,31 +64,32 @@ char const* gl_error_string(GLenum const err)
 
 int32_t graphics_get_display_size( const uint16_t display_number, uint32_t *width, uint32_t *height) {
 	fprintf(stderr, "graphics_get_display_size()\n");
+
 	sdl_window = SDL_CreateWindow("test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		480, 320, SDL_WINDOW_OPENGL);
-	
+
 	if (!sdl_window) {
 		fprintf(stderr, "Failed to create window. %s\n", SDL_GetError());
-		return 0;
+		return -1;
 	}
 
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GL_SetSwapInterval(1);
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetSwapInterval(1);
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
-    sdl_ctx = SDL_GL_CreateContext(sdl_window);
+	sdl_ctx = SDL_GL_CreateContext(sdl_window);
 	if (!sdl_ctx) {
 		fprintf(stderr, "Failed to create context. %s\n", SDL_GetError());
-		return 0;
+		return -1;
 	}
 
 	SDL_GL_SetSwapInterval(1);
-	
+
 	SDL_GetWindowSize(sdl_window, width, height);
-	return sdl_window != NULL;
+	return 0;
 }
 
 int vc_dispmanx_display_open(int device) {
@@ -172,9 +172,9 @@ void glDeleteRenderbuffersOES(GLsizei n, const GLuint* renderbuffers) {
 
 EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurface surface)
 {
-	if (sdl_window) {
-		SDL_GL_SwapWindow(sdl_window);
-	}
-	
-	return sdl_window != NULL;
+	if (!sdl_window)
+		return EGL_FALSE;
+
+	SDL_GL_SwapWindow(sdl_window);
+	return EGL_TRUE;
 }
