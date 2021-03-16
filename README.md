@@ -2,9 +2,10 @@
 
 This is a set of fixes and shim libraries for the Raspberry Pi's GameMaker runner, allowing it to boot a number of different games like Spelunky, Nuclear Throne and others, and allowing for blacklisting unintended gamepads (such as sensors, unmapped generic controllers, etc).
 
-1) bcm_host: A shim half-implementing libbcm_host functions with SDL2.0 for OGA-like devices, forked from [gamemaker-rpi-wrapper](https://github.com/jdonald/gamemaker-rpi-wrapper).
-1) yyg_fix: A series of fixes for the GameMaker runner, such as reimplementations of different GML functions, and joystick device blacklisting.
-1) patch.xdelta: A patch that removes a few unecessary sanity checks on the Raspberry Pi GameMaker runner, allowing you to boot games not specifically compiled for it.
+1) [bcm_host](bcm_host.c): A shim half-implementing libbcm_host functions with SDL2.0 for OGA-like devices, forked from [gamemaker-rpi-wrapper](https://github.com/jdonald/gamemaker-rpi-wrapper).
+1) [yyg_fix](yyg_fix.c): A series of fixes for the GameMaker runner, such as reimplementations of different GML functions, and joystick device blacklisting.
+1) [patch.xdelta](patch.xdelta): A patch that removes a few unecessary sanity checks on the Raspberry Pi GameMaker runner, allowing you to boot games not specifically compiled for it.
+1) [16Or17To15](16Or17To15.csx): An experimental extension for downgrading `.win` and `.unx` GameMaker data files to v1.4.1084.
 
 # How did you do it?
 
@@ -20,7 +21,7 @@ $ make
 
 You'll need a copy of the Raspberry Pi runners. You can find one freely available at [the yoyogames server](http://download.yoyogames.com/pi/TheyNeedToBeFed.tar.gz). These are freeware and thus should not be redistributed, specially pre-patched.
 
-Patch your runner (in this case, you can apply an [xdelta](patch.xdelta) on the _They Need To Be Fed_ runner.
+Patch your runner. In this case, you can apply an [xdelta](patch.xdelta) on the _They Need To Be Fed_ runner.
 
 ```
 $ xdelta patch patch.xdelta TheyNeedToBeFed TheyNeedToBeFed_PATCHED
