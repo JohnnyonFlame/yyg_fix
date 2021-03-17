@@ -54,14 +54,21 @@ typedef struct yyg_vdecl_t {
 typedef void (*yyg_routine_t)(yyg_rval *ret, void *self, void *other, int argc, yyg_rval *args);
 
 // Offsets from the yyg runner
-const void (*yyg_define_builtin)(const char *id, yyg_routine_t func, int, int)     = (void(*))0x000258f8;
-const void (*yyg_assure_str)(yyg_rval *var_table, int slot, void *other, int argc) = (void(*))0x00026584;
+const void      (*yyg_define_builtin)(const char *id, yyg_routine_t func, int, int)     = (void(*))0x000258f8;
+const void      (*yyg_assure_str)(yyg_rval *var_table, int slot, void *other, int argc) = (void(*))0x00026584;
+const int       (*yyg_typecast_rval)(yyg_rval *lval, yyg_rval* rval, int unk1)          = (void(*))0x000289b0; // assumed - probably wrong?
+const yyg_rval* (*yyg_get_rval_by_id)(void *unk, int id)                                = (void(*))0x000e1b08;
 
 // const int          *yyg_builtin_cnt          = 0x0041b424;
 // const void         *yyg_builtin_registry     = 0x0041b428;
-const int          *yyg_builtin_var_count    = (int*)          0x0063f330;
-const yyg_vdecl_t  *yyg_builtin_var_registry = (yyg_vdecl_t  *)0x0063f334;
-const int          *yyg_var_count            = (int*)          0x0041b458;
-const yyg_vdecl_t  *yyg_var_registry         = (yyg_vdecl_t  *)0x0041b45c;
+
+const int          *yyg_local_var_count      = (int*)         0x0041b458;
+const yyg_vdecl_t  *yyg_local_var_registry   = (yyg_vdecl_t*) 0x0041b45c;
+const int          *yyg_builtin_var_count    = (int*)         0x0063f330;
+const yyg_vdecl_t  *yyg_builtin_var_registry = (yyg_vdecl_t*) 0x0063f334;
+const int          *yyg_global_var_count     = (int*)         0x0041b464;
+const char       ***yyg_global_var_table     = (const char***)0x0041b460;
+
+#define UNKNOWN_MAGIC_0 *(void**)0x00645d14
 
 #endif /* __YYG_FIX_H__ */

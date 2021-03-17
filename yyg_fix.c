@@ -123,20 +123,47 @@ static int get_var_slot_by_name(const int *off_count, const yyg_vdecl_t *off_reg
 	return -1;
 }
 
+static int get_var_index_by_name(const int *count_ptr, const char ***table_ptr, const char *var)
+{
+	int count = *count_ptr;
+	const char **table = *table_ptr;
+
+	for (int i = 0; i < count; i++) {
+		if (!table[i])
+			continue;
+		
+		if (strcmp(table[i], var) == 0)
+			return i;
+	}
+	
+	return -1;
+}
+
 static void reimpl_variable_global_exists(yyg_rval *ret, void *self, void *other, int argc, yyg_rval *args)
 {
+	ret->rvalue.val = 0.0f;
+	ret->kind = VALUE_BOOL;
+
 	yyg_assure_str(args, 0, other, argc);
 	char *var_name = (char*)args[0].rvalue.str->m_thing;
-	int var_slot = get_var_slot_by_name(yyg_var_count, yyg_var_registry, var_name);
-	if (var_slot < 0)
-		var_slot = get_var_slot_by_name(yyg_builtin_var_count, yyg_builtin_var_registry, var_name);
+	int var_slot = get_var_slot_by_name(yyg_builtin_var_count, yyg_builtin_var_registry, var_name);
+	if (var_slot < 0) {
+		// Not a built-in, look up on global var table
+		var_slot = get_var_index_by_name(yyg_global_var_count, yyg_global_var_table, var_name);
+		if (var_slot >= 0) {
+			//The global only "exists" once it's been instanced once, so here we check for that
+			const yyg_rval *rv = yyg_get_rval_by_id(UNKNOWN_MAGIC_0, var_slot);
 
-	printf("[r: %d b: %d] get_var_slot_by_name(\"%s\") => %d.\n", *yyg_var_count, *yyg_builtin_var_count, var_name, var_slot);
-
-	ret->rvalue.v64 = (var_slot != -1) ? 1.0f : 0.0f;
-	ret->kind = VALUE_BOOL;
-	return;
+			//So, was it?
+			if (rv->kind != MASK_KIND_RVALUE)
+				ret->rvalue.val = 1.0f;
+		}
+	} else {
+		// Built-ins just exist by default.
+		ret->rvalue.val = 1.0f;
+	}
 }
+
 #if 0
 static void hook_ds_map_set(yyg_rval *ret, void *self, void *other, int argc, yyg_rval *args)
 {
@@ -148,7 +175,7 @@ static void hook_ds_map_set(yyg_rval *ret, void *self, void *other, int argc, yy
 #endif
 void init_yyg_fix()
 {
-    yyg_define_builtin("psn_get_trophy_unlock_state", stub_psn_get_trophy_unlock_state, 1, 1);
+	yyg_define_builtin("psn_get_trophy_unlock_state", stub_psn_get_trophy_unlock_state, 1, 1);
 	yyg_define_builtin("variable_global_exists", reimpl_variable_global_exists, 1, 1);
 	yyg_define_builtin("bool", reimpl_bool, 1, 1);
 	yyg_define_builtin("int64", reimpl_int64, 1, 1);
