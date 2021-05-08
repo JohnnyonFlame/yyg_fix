@@ -13,16 +13,20 @@ if (Data?.GeneralInfo.BytecodeVersion >= 16)
     }
     if (Data?.GeneralInfo.BytecodeVersion == 17)
 	{
+		//Data.GMS2_2_2_302 = false;
 	    if (Data.FORM.Chunks.ContainsKey("TGIN"))
 	        Data.FORM.Chunks.Remove("TGIN");
 	}
+
     if (Data.FORM.Chunks.ContainsKey("LANG"))
         Data.FORM.Chunks.Remove("LANG");
     if (Data.FORM.Chunks.ContainsKey("GLOB"))
         Data.FORM.Chunks.Remove("GLOB");
     if (Data.FORM.Chunks.ContainsKey("EMBI"))
         Data.FORM.Chunks.Remove("EMBI");
+    
 	Data.Options.Constants.Clear();
+
 	for (int i = 0; i < Data.Strings.Count; i++)
 	{
 		if (Data.Strings[i].Content == "@@SleepMargin")
@@ -32,6 +36,7 @@ if (Data?.GeneralInfo.BytecodeVersion >= 16)
 		if (Data.Strings[i].Content == "4294967295")
 			Data.Strings.Remove(Data.Strings[i]);
 	}
+
     Data.GeneralInfo.BytecodeVersion = 15;
     Data.GeneralInfo.Major = 1;
     Data.GeneralInfo.Build = 1804;

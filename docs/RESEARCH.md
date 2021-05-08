@@ -133,7 +133,7 @@ This is great, but there are plenty of other amazing titles out there, such as [
 [21:01] Grossley: Yeah I've done that before shouldn't be too hard
 ```
 
-Enter _UTMT_ again. Within a few moments _Grossley_ had an initial implementation of the [envisioned extension](16Or17To15.csx). There's beauty on well researched, documented, smart tooling that can be extended easily with a few scripts. Having a fast iteration cycle is important for research, and being able to extend your tools directly with simple scripts should never be taken for granted.
+Enter _UTMT_ again. Within a few moments _Grossley_ had an initial implementation of the [envisioned extension](scripts/16Or17To15.csx). There's beauty on well researched, documented, smart tooling that can be extended easily with a few scripts. Having a fast iteration cycle is important for research, and being able to extend your tools directly with simple scripts should never be taken for granted.
 
 ![](https://i.imgur.com/SExco4J.png)
 
