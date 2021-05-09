@@ -1,14 +1,27 @@
-CC=arm-linux-gnueabihf-gcc
-CXX=arm-linux-gnueabihf-g++
-SDL_CFLAGS=$(shell arm-linux-gnueabihf-pkg-config sdl2 --cflags)
-SDL_LIBS=$(shell arm-linux-gnueabihf-pkg-config sdl2 --libs)
+CC = arm-linux-gnueabihf-gcc
+CXX = arm-linux-gnueabihf-g++
+SDL_CFLAGS = $(shell arm-linux-gnueabihf-pkg-config sdl2 --cflags)
+SDL_LIBS = $(shell arm-linux-gnueabihf-pkg-config sdl2 --libs)
 
-all: bcm_host.o yyg_fix.o empty.o
-	$(CC) -fPIC -shared -Wl,-soname,libbcm_host.so.1 bcm_host.o yyg_fix.o $(SDL_LIBS) -o libbcm_host.so
-	$(CC) -fPIC -shared -Wl,-soname,libcurl.so.4 empty.o -o libcurl.so.4
+PRELDFLAGS = -fPIC -shared -Wl,-soname,libbcm_host.so.1
+CFLAGS = -fPIC
+
+ifeq ($(LEGACY_RPI), 1)
+	BACKEND = bcm_host
+	PRELDFLAGS += -u vc_gpuserv_init
+	CFLAGS += -Wno-multichar -Wall -Werror -Wno-unused-but-set-variable -I/opt/vc/include/ -I/opt/vc/include/interface/vmcs_host/ -I/opt/vc/include/interface/vchiq_arm/ -I/opt/vc/include/interface/vcos/pthreads/
+	LDFLAGS = -L/opt/vc/lib -ldl -lvcos -lvchostif
+else
+	BACKEND = sdl2_host
+	CFLAGS += $(SDL_CFLAGS)
+	LDFLAGS = $(SDL_LIBS)
+endif
+
+all: src/backends/$(BACKEND).o src/yyg_fix.o
+	$(CC) $(PRELDFLAGS) src/backends/$(BACKEND).o src/yyg_fix.o $(LDFLAGS) -o lib/libbcm_host.so
 
 %.o: %.c
-	$(CC) -c $< -o $@ -fPIC $(SDL_CFLAGS)
+	$(CC) -c $< -o $@ -fPIC $(CFLAGS)
 
 clean:
-	rm -f libcurl.so.4 libbcm_host.so bcm_host.o yyg_fix.o empty.o
+	rm -f lib/libbcm_host.so src/*.o src/backends/*.o

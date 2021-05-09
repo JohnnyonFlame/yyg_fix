@@ -4,7 +4,7 @@
 #include <EGL/egl.h>
 #include <GLES/gl.h>
 #include <GLES2/gl2.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 typedef void* DISPMANX_ELEMENT_HANDLE_T;
 typedef void* DISPMANX_DISPLAY_HANDLE_T;
