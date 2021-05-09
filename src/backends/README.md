@@ -1,4 +1,4 @@
-## NOTICE: The included file 'bcm_host.c' is licensed under the following BSD 3-clause license:
+## NOTICE: 'bcm_host.c' is licensed under the following BSD 3-clause license:
 
 ```
 Copyright (c) 2012, Broadcom Europe Ltd

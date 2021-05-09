@@ -18,6 +18,7 @@ You'll need to install the following dependencies to use this project:
 - `libsdl2-dev` (if using the SDL2 backend)
 - `libraspberrypi0-dev` (if on Raspberry Pi and using the DispmanX backend)
 - `xdelta`
+- `libopenal-dev`
 - `patchelf`
 
 # Usage:
@@ -28,28 +29,31 @@ Either download [a binary release](https://github.com/JohnnyonFlame/yyg_fix/rele
 $ make
 ```
 
-There are several different backends you can choose from, so just add one of the following flags:
+There are now several different backends you can choose from:
 
 Backend | Description
 --------|------------
-SDL2 | The default backend using SDL 2.0.
+SDL2 | The default backend using SDL 2.0. Makes it possible to run the GameMaker runner on many other ARM devices.
 DispmanX | The half-proprietary graphics driver for the Raspberry Pi series of SBCs. Append `LEGACY_RPI=1` after the `make` command to enable.
+
+If you plan on running this project on an OGA-like device, you'll need to compile a program called `rg351p-js2xbox` and place it in your home directory. This is a button remapper that makes it possible to use the buttons on these devices with standardized game controls. You can find this program [here](https://github.com/lualiliu/RG351P_virtual-gamepad).
 
 You'll also need a copy of the Raspberry Pi runners. You can find one freely available at [the yoyogames server](http://download.yoyogames.com/pi/TheyNeedToBeFed.tar.gz), (you might need to _right click_ and select _save as_ on some browsers). These are freeware and thus should not be redistributed, specially pre-patched.
  
 Patch your runner. In this case, you can apply one of the [ips patches](patches/ips) with [an online tool](https://www.marcrobledo.com/RomPatcher.js/) or one of the [XDelta patches](patches/xdelta) with the following command on linux:
 
-### If using an OGA-like/generic ARM Linux device (or targeting a SDL backend):
+### If using a Raspberry Pi:
+
+```
+$ xdelta patch patches/xdelta/raspi.xdelta TheyNeedToBeFed runner_raspi
+```
+
+### If using any other ARM based/OGA-like device (or if you're having trouble using the DispmanX drivers):
 
 ```
 $ xdelta patch patches/xdelta/armlinux.xdelta TheyNeedToBeFed runner_arm
 ```
 
-### If using a Raspberry Pi and targeting the legacy DispmanX drivers:
-
-```
-$ xdelta patch patches/xdelta/raspi.xdelta TheyNeedToBeFed runner_raspi
-```
 ---
 If the game is running _Bytecode 16_ or higher, you'll need to downgrade your `.win` or `.unx` file using the [UndertaleModTool (UTMT)](https://github.com/krzys-h/UndertaleModTool) with the [downgrader extension](https://raw.githubusercontent.com/JohnnyonFlame/yyg_fix/master/16Or17To15.csx), the file must be renamed/saved as `game.unx` - regardless of version.
 
@@ -67,13 +71,13 @@ Next, create the `run.sh` script in your game folder, like this one (remember to
 
 cd "$(dirname "$0")"
 #export LD_LIBRARY_PATH=/usr/lib32:/usr/config/emuelec/lib32:$PWD/lib   # For 351ELEC/EMUELEC
-#export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH   # For Raspberry Pi devices and Generic ARM Devices
+#export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH   # For Raspberry Pi and other ARM Devices
 export LD_PRELOAD=$PWD/lib/libbcm_host.so
 #export REMAPPER=rg351p-js2xbox   # For OGA-like devices
 
 #~/$REMAPPER &   # For OGA-like devices
 #./runner_raspi   # For Raspberry Pi devices
-#./runner_arm   # For OGA-like and Generic ARM devices
+#./runner_arm   # For OGA-like and other ARM devices
 #killall -9 $REMAPPER   # For OGA-like devices
 ```
 
@@ -90,28 +94,26 @@ $ patchelf --set-interpreter /usr/lib32/ld-linux-armhf.so.3 runner_arm
 ```
 $ patchelf --set-interpreter /usr/config/emuelec/lib32/ld-linux-armhf.so.3 runner_arm
 ```
-
+---
 ## You can also test it via SSH:
 
-### If you're either on 351ELEC/EMUELEC or using an OGA-like device:
+### If EmulationStation is running, kill it:
 ```
 $ systemctl stop emustation.service
+```
+
+### If you're using an OGA-like device and/or are using 351ELEC/EMUELEC, run:
+```
 $ LD_LIBRARY_PATH=/usr/lib32:/usr/config/emuelec/lib32:$PWD LD_PRELOAD=libbcm_host.so ./runner_arm
 ```
 
-### If you're using a Raspberry Pi device:
+### Otherwise, run:
 ```
-$ systemctl stop emustation.service   # Only if running EmulationStation
-$ export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH LD_PRELOAD=lib/libbcm_host.so ./runner_raspi
+$ export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH LD_PRELOAD=lib/libbcm_host.so ./runner_<raspi or arm>
 ```
 
-### If you're using a Generic ARM device:
-```
-$ systemctl stop emustation.service   # Only if running EmulationStation
-$ export LD_LIBRARY_PATH=$PWD/lib:$LD_LIBRARY_PATH LD_PRELOAD=lib/libbcm_host.so ./runner_arm
-```
 ---
-# Example Install:
+# Example installation:
 ### We'll be using Nuclear Throne as an example:
 
 A good install, which will allow you to launch these games from EmulationStation, should look like this:
@@ -153,3 +155,5 @@ $ find /roms/ports/nthrone
 # LICENSE:
 
 This is free software. The source files in this repository are released under the [Modified BSD License](LICENSE.md), see the license file for more information.
+
+This product includes software developed by the OpenSSL Project for use in the OpenSSL Toolkit (http://www.openssl.org/). See the [license list](lib/README.md) in the libraries folder for more information.

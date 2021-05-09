@@ -13,6 +13,7 @@ if (Data?.GeneralInfo.BytecodeVersion >= 16)
     }
     if (Data?.GeneralInfo.BytecodeVersion == 17)
 	{
+		//TODO - test this function
 		//Data.GMS2_2_2_302 = false;
 	    if (Data.FORM.Chunks.ContainsKey("TGIN"))
 	        Data.FORM.Chunks.Remove("TGIN");
